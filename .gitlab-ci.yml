@@ -34,7 +34,7 @@ Build:
 
 
 # Publishes the project (only from master).
-Publish:
+pages:
   image: alpine
   stage: publish
   # This script publishes the artifacts into gitlab pages.
