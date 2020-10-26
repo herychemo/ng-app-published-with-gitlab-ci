@@ -1,39 +1,44 @@
-image: node:lts-alpine3.9
 
+# Fetch git submodules if exist
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
 
+
+# Cache node_modules directory to avoid fetching the dependencies everytime.
+cache:
+  paths:
+    - node_modules/
+
+
 stages:
+  - install
   - build
   - publish
 
-# Only tests that project is able to build using package.json 'build' task without publishing.
+# Install dependencies
+InstallDependencies:
+  image: node:lts-alpine3.9
+  stage: install
+  script:
+    - yarn
+
+
+# Build project
 Build:
+  image: node:lts-alpine3.9
   stage: build
-  # Cache node_modules directory to avoid fetching the dependencies everytime.
-  cache:
-    paths:
-      - node_modules/
   # This script just builds the project, you can customize it to also run all the unit tests.
   script:
-    - yarn
     - yarn build
-  # Run build stage only on development branches.
-  except:
-    - master
 
-# Build and publish project using package.json 'build' task.
+
+# Publishes the project (only from master).
 Publish:
+  image: alpine
   stage: publish
-  # Cache node_modules directory to avoid fetching the dependencies everytime.
-  cache:
-    paths:
-      - node_modules/
-  # This script builds the project and then publishes the artifacts into gitlab pages.
+  # This script publishes the artifacts into gitlab pages.
   script:
-    - yarn
-    - yarn build
-    - mv dist/ng-app-published-with-gitlab-ci/* public/
+    - mv dist/* public/
   artifacts:
     paths:
       - public
