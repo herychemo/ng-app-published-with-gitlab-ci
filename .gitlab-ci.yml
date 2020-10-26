@@ -30,7 +30,7 @@ Build:
   stage: build
   # This script just builds the project, you can customize it to also run all the unit tests.
   script:
-    - yarn build
+    - yarn build:gitlab
 
 
 # Publishes the project (only from master).
