@@ -8,6 +8,7 @@ variables:
 cache:
   paths:
     - node_modules/
+    - dist/
 
 
 stages:
