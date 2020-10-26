@@ -10,8 +10,13 @@ stages:
 # Only tests that project is able to build using package.json 'build' task without publishing.
 Build:
   stage: build
+  # Cache node_modules directory to avoid fetching the dependencies everytime.
+  cache:
+    paths:
+      - node_modules/
   # This script just builds the project, you can customize it to also run all the unit tests.
   script:
+    - yarn
     - yarn build
   # Run build stage only on development branches.
   except:
@@ -26,6 +31,7 @@ Publish:
       - node_modules/
   # This script builds the project and then publishes the artifacts into gitlab pages.
   script:
+    - yarn
     - yarn build
     - mv dist/ng-app-published-with-gitlab-ci/* public/
   artifacts:
