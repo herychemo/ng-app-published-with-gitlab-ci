@@ -1,0 +1,37 @@
+image: node:lts-alpine3.9
+
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+
+stages:
+  - build
+  - publish
+
+# Only tests that project is able to build using package.json 'build' task without publishing.
+Build:
+  stage: build
+  # This script just builds the project, you can customize it to also run all the unit tests.
+  script:
+    - yarn build
+  # Run build stage only on development branches.
+  except:
+    - master
+
+# Build and publish project using package.json 'build' task.
+Publish:
+  stage: publish
+  # Cache node_modules directory to avoid fetching the dependencies everytime.
+  cache:
+    paths:
+      - node_modules/
+  # This script builds the project and then publishes the artifacts into gitlab pages.
+  script:
+    - yarn build
+    - mv dist/ng-app-published-with-gitlab-ci/* public/
+  artifacts:
+    paths:
+      - public
+  # Only publish from master
+  only:
+    - master
+
