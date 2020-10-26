@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'ng-app-published-with-gitlab-ci';
+  title = 'Angular application published with Gitlab CI into Gitlab pages';
 }
